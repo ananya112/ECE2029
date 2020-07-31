@@ -1,0 +1,36 @@
+module JK_Flip_Flop(J,K,clk,clr,Q,Qbor);
+
+input J, K, clr,clk;
+output reg Q, Qbor;
+
+always@(negedge)
+	if(clr==0)begin
+	Q<=0;
+	Qbor <= 1;
+case({clr,J,K})
+	3'b100: Q<=Q; Qbor<=~Q;
+	3'b101:	Q<=1'b0; Qbor<=1'b1;
+	3'b110:	Q<=1'b1; Qbor<=1'b0;
+	3'b111:	Q<=~Q; Qbor<=Q;
+	default: Q<=1'b0; Qbor<=1'b1;
+endcase
+
+end
+endmodule 
+
+
+module two_bit_counter(J,K,clk,clr,Q,Qbor);
+
+input [2:1] J,K;
+input wire clk, clr;
+output [2:1] Q;
+output [2:1] Qbor;
+
+assign J[1] =Q[2];
+assign J[2] = 1'b1;
+assign K[1]= Q[2];
+assign k[2] = 1'b1;
+
+JK_Flip_Flop JKFF1(J[1], K[1], clk, clr, Q[1], Qbor[1]);
+JK_Flip_Flop JKFF2(J[2], K[2], clr, Q[1], Q[2], Qbor[2]);
+endmodule
